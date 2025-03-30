@@ -1,14 +1,16 @@
 #ifndef RESIZINGARRAY_H
 #define RESIZINGARRAY_H
 #include <iostream>
+#include <fstream>
+
 
 //template referenced from geeksforgeeks (https://www.geeksforgeeks.org/templates-cpp/)
 template <typename T> class ResizingArray {
 public:
     ResizingArray() {
-        arr = new T[1];
+        arr = new T[5];
         size = 0;
-        maxSize = 1;    
+        maxSize = 5;    
     }
 
     ~ResizingArray() {
@@ -55,6 +57,10 @@ public:
     }
     int getMaxSize() {
         return maxSize;
+    }
+
+    T getValue(int indexNum){
+        return arr[indexNum];
     }
 
 private:
