@@ -12,7 +12,7 @@ CXXFLAGS = -c -g -Wall -std=c++17
 PROGRAM = main.out
 
 # list all .cpp files separated by space
-CPPFILES = main.cpp
+CPPFILES = main.cpp graph.cpp
 
 # make all rule/default rule that'll be run when we run "make"
 # first compile each file to object file

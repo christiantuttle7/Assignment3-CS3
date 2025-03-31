@@ -75,13 +75,14 @@ private:
         maxSize *= 2; //double the size    
     }
     void Quarter() {
-        T* newArr = new T[maxSize/4];
+         T* newArr = new T[maxSize/4];
         for (int i = 0; i < maxSize; i++) { //copy elements from old arr to new arr
             newArr[i] = arr[i];
         }
         delete [] arr; //remove old array
         arr = newArr; //move pointer to new array    
         maxSize /= 4; //quarter the size    
+           
     }
     T* arr;
     int size;

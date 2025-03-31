@@ -1,5 +1,5 @@
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef QUEUETEST_H
+#define QUEUETEST_H
 
 #include "ResizingArray.h"
 
@@ -10,7 +10,7 @@ private:
 
 public:
     void Enqueue(T value) {
-        // uses ResizingArray's Push
+        
         data.Push(value);
     }
 

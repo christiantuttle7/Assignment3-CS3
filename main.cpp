@@ -1,9 +1,12 @@
 #include <iostream>
+#include <chrono>
+#include <fstream>
+#include <iomanip>
 #include "graph.h"
 
 using namespace std;
 
-
+void printLog(int[], ResizingArray<int>&, ResizingArray<int>&, ResizingArray<int>&, int);
 int main(){
 
     
@@ -11,36 +14,100 @@ int main(){
 
     int sourceArray[3];
     int numSources = 3;
-    int destArray[3];
-    int numDests = 3;
+    int destination;
+    ResizingArray<int> destinations;
+    ResizingArray<int> shortestPaths;
+    ResizingArray<int> shortestPathsTime;
+    int shortestPath, shortestPathTime;
 
+    //start program timer (credit to geek for geeks in the latex document)
     auto start = high_resolution_clock::now();
 
+    //gets the three sources from user
     cout << "Enter Three Source: ";
-    cin >> sourceArray[0] >>sourceArray[1] >> sourceArray[2];
-    cin.ignore();
-    cout << "Enter Three Destinations";
-    cin >> destArray[0] >> destArray[1] >> destArray[2];
+    for(int i = 0; i < numSources; i++){
+        cin >> sourceArray[i];
+    }
     cin.ignore();
 
+    //while loop that keeps asking user for a destination output until it recieves a -1
+    //(it breaks from inside the loop)
+    while(true){
+        cout << "Destination " << destinations.getSize() +1 << ": ";
+        cin >> destination;
+        cin.ignore();
+        
+
+        if(destination == -1){
+            
+            break;
+        }
+        destinations.Push(destination);
+
+        for(int i = 0; i < numSources; i++){
+            //calculates shortest path from source -> destination
+            shortestPath = mainGraph.shortestPath(sourceArray[i], destination);
+            //gets the time it took to get that calculation
+            shortestPathTime = mainGraph.getLastPathTime();
+            if(shortestPath == -1){
+                cout << "Shortest Path from " << sourceArray[i] <<": No Path Found(" << 
+                mainGraph.getLastPathTime() << " nanoseconds)" << endl;
+                shortestPaths.Push(-1);
+
+            } 
+            else{
+                cout << "Shortest Path from " << sourceArray[i] <<": " << shortestPath <<
+                "( <"<< mainGraph.getLastPathTime()  << " nanoseconds)" << endl;
+                shortestPaths.Push(shortestPath);
+            }
+
+            shortestPathsTime.Push(shortestPathTime);
+
+        }
+        
+        cout << endl;
+        
+    }
+    
     cout << endl;
 
-    for(int i = 0; i < numSources; i++){
-        cout << "Source: " << sourceArray[i] << endl;
-        for(int j = 0; j < numDests; j++){
-            int p = mainGraph.shortestPath(sourceArray[i], destArray[j]);
-            cout << "Shortest Path to " << destArray[j] << ": " << p << endl;
-        }
-        cout << endl;
-    }
+    //print formatted log
+    printLog(sourceArray, destinations, shortestPaths, shortestPathsTime, numSources);
 
-    
+    //stop timer and print out time
     auto stop = high_resolution_clock::now();
-
     auto duration = duration_cast<seconds>(stop - start);
     cout << "Program took: " << duration.count() << "seconds" <<  endl;
 
+    return 0;
+
 
 
     
+}
+
+
+void printLog(int sourceArray[], ResizingArray<int>& destinations, ResizingArray<int>& shortestPaths, 
+ResizingArray<int>& shortestPathsTime, int numSources){
+    cout << setw(4) << "S |" << setw(4) << "D |" << 
+    setw(4) << "Dist. |" << setw(4) <<"Time" << endl;
+    cout << "-------------------------------" << endl;
+    int resultIndex = 0;
+    for( int i = 0; i < destinations.getSize(); i++){
+        for(int j = 0; j < numSources; j++ ){
+            if(shortestPaths.getValue(resultIndex) == -1){
+                //cout << "Shortest Path from " << sourceArray[j] << " -> " << destinations.getValue(i) <<
+                //": N/A" << endl;
+                cout << sourceArray[j] << setw(4) << destinations.getValue(i) << setw(4) << 0 << 
+                setw(4) << shortestPathsTime.getValue(resultIndex) << endl;
+
+            }else{
+                //cout << "Shortest Path from " << sourceArray[j] << " -> " << destinations.getValue(i) <<
+                //": " << shortestPaths.getValue(resultIndex) << endl;
+                cout  << sourceArray[j] << setw(4) << destinations.getValue(i) << setw(4) <<
+                shortestPaths.getValue(resultIndex)<< setw(4) << "  " << shortestPathsTime.getValue(resultIndex) << endl;
+            }
+            resultIndex ++;
+        }
+    }
 }
