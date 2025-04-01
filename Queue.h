@@ -41,6 +41,10 @@ public:
     bool IsEmpty() {
         return data.getSize() == 0;
     }
+
+    int numElements(){
+        return data.getSize();
+    }
 };
 
 #endif

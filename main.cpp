@@ -42,13 +42,20 @@ int main(){
             
             break;
         }
+
         destinations.Push(destination);
 
         for(int i = 0; i < numSources; i++){
             //calculates shortest path from source -> destination
+
             shortestPath = mainGraph.shortestPath(sourceArray[i], destination);
+
+            
             //gets the time it took to get that calculation
             shortestPathTime = mainGraph.getLastPathTime();
+
+
+            //if the shortestPath == 1 it means no path was found in shorestPath()
             if(shortestPath == -1){
                 cout << "Shortest Path from " << sourceArray[i] <<": No Path Found(" << 
                 mainGraph.getLastPathTime() << " nanoseconds)" << endl;
@@ -58,10 +65,19 @@ int main(){
             else{
                 cout << "Shortest Path from " << sourceArray[i] <<": " << shortestPath <<
                 "( <"<< mainGraph.getLastPathTime()  << " nanoseconds)" << endl;
+                cout << "Path: ";
+                
+                //print path
+                mainGraph.printShortestPath(sourceArray[i], destination);
+
                 shortestPaths.Push(shortestPath);
+                
             }
+            
 
             shortestPathsTime.Push(shortestPathTime);
+
+            
 
         }
         
@@ -79,6 +95,9 @@ int main(){
     auto duration = duration_cast<seconds>(stop - start);
     cout << "Program took: " << duration.count() << "seconds" <<  endl;
 
+
+    std::cout << std::chrono::system_clock::now() << '\n';
+
     return 0;
 
 
@@ -89,23 +108,23 @@ int main(){
 
 void printLog(int sourceArray[], ResizingArray<int>& destinations, ResizingArray<int>& shortestPaths, 
 ResizingArray<int>& shortestPathsTime, int numSources){
-    cout << setw(4) << "S |" << setw(4) << "D |" << 
+    cout <<setw(4) << "S  |" << setw(4) << "D  |" << 
     setw(4) << "Dist. |" << setw(4) <<"Time" << endl;
     cout << "-------------------------------" << endl;
     int resultIndex = 0;
     for( int i = 0; i < destinations.getSize(); i++){
         for(int j = 0; j < numSources; j++ ){
             if(shortestPaths.getValue(resultIndex) == -1){
-                //cout << "Shortest Path from " << sourceArray[j] << " -> " << destinations.getValue(i) <<
-                //": N/A" << endl;
-                cout << sourceArray[j] << setw(4) << destinations.getValue(i) << setw(4) << 0 << 
-                setw(4) << shortestPathsTime.getValue(resultIndex) << endl;
+                
+                cout << sourceArray[j] << setw(5) << destinations.getValue(i) << setw(5) << "N/A" << 
+                setw(10) << shortestPathsTime.getValue(resultIndex) << endl;
 
+                
             }else{
                 //cout << "Shortest Path from " << sourceArray[j] << " -> " << destinations.getValue(i) <<
                 //": " << shortestPaths.getValue(resultIndex) << endl;
-                cout  << sourceArray[j] << setw(4) << destinations.getValue(i) << setw(4) <<
-                shortestPaths.getValue(resultIndex)<< setw(4) << "  " << shortestPathsTime.getValue(resultIndex) << endl;
+                cout << sourceArray[j] << setw(5) << destinations.getValue(i) << setw(5) <<
+                shortestPaths.getValue(resultIndex)<< setw(10) << shortestPathsTime.getValue(resultIndex) << endl;
             }
             resultIndex ++;
         }

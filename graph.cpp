@@ -23,11 +23,7 @@ graph::graph(string inputFileName){
             edgeTo = new int[numVertices];
             distTo = new int[numVertices];
 
-            
 
-            
-
-        
 
             //adjacency list, allocating memory
             adjList = new ResizingArray<int> *[numVertices];
@@ -85,7 +81,10 @@ int graph::shortestPath(int source, int destination){
                 distTo[i] = -1;//-1 represents infinity here
             }
 
-            Queue<int>* bfsQueue = new Queue<int>;
+            
+            // queue from last calculation
+            Queue<int> bfsQueue ;
+
 
             //starting the timer
             //credit to geeks for geeks for help with using chrono librarie for timing
@@ -93,15 +92,15 @@ int graph::shortestPath(int source, int destination){
 
             //load source vertex into queue
         
-            bfsQueue->Enqueue(source);
+            bfsQueue.Enqueue(source);
             visited[source] = true;
             distTo[source] = 0;
 
             //while loop that keeps going until we have found our destination vertex
-            while (!bfsQueue->IsEmpty()) {
+            while (!bfsQueue.IsEmpty()) {
                 
                 //dequeueing next vertex
-                int v = bfsQueue->Dequeue();
+                int v = bfsQueue.Dequeue();
 
                 if(visited[destination]){
                     break;
@@ -116,7 +115,7 @@ int graph::shortestPath(int source, int destination){
 
                     //updating all the information in the three arrays
                     if (!visited[neighbor]) {
-                        bfsQueue->Enqueue(neighbor);
+                        bfsQueue.Enqueue(neighbor);
                         visited[neighbor] = true;
                         edgeTo[neighbor] = v;
                         distTo[neighbor] = distTo[v] + 1;
@@ -131,13 +130,14 @@ int graph::shortestPath(int source, int destination){
             lastPathTime = duration.count();
             
 
-            delete bfsQueue;
 
             if(!visited[destination]){
                 //no path found, return -1 
                 return -1;
             }
 
+
+        
 
 
             //return the correct distance
@@ -147,8 +147,49 @@ int graph::shortestPath(int source, int destination){
 }
 
 int graph::getLastPathTime(){
+    //returns last calculated time from bfs
     return lastPathTime;
 }
+
+
+
+
+void graph::printShortestPath(int source, int destination){
+
+    
+    //this will hold the path dest->source
+    ResizingArray<int> path;
+        
+    //making sure the path has been calculated in the shortestPath() function
+    if (!visited[destination] || distTo[source] != 0) {
+        cout << "No path found or path not calculated\n";
+        return;
+    }
+
+
+
+
+    //figure out the path edge by edge using edgeTo[] array
+    int nextEdge = destination;
+
+    while (nextEdge != source) {
+        path.Push(nextEdge);
+        nextEdge = edgeTo[nextEdge];
+        if (nextEdge == -1) {
+            cout << "Error in path reconstruction";
+            return;
+        }
+    }
+    path.Push(source); //push the edge into the array
+
+    //print out the path (it was stored backwards)
+    for (int i = path.getSize() - 1; i >= 0; i--) {
+        cout << path.getValue(i) << "->";
+    }
+    cout << endl;
+    
+    return;
+ }
 
 
 

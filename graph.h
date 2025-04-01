@@ -16,6 +16,9 @@ class graph{
         ResizingArray<int> **adjList;
         int numVertices;
         int lastPathTime;
+
+        ResizingArray<int> path;
+        Queue<int> bfsQueue;
         
         bool* visited;
         int* edgeTo;
@@ -25,6 +28,7 @@ class graph{
         ~graph();
         int shortestPath(int source, int destination);
         int getLastPathTime();
+        void printShortestPath(int source, int destination);
 
 };
 #endif
